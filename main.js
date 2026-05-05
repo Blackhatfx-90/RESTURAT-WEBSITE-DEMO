@@ -78,21 +78,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
             /* --- Data Sets --- */
             const menuData = [
-                { id: 1, title: 'Paneer Tikka', category: 'starter', price: '₹350', img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc0?auto=format&fit=crop&w=600&q=80', desc: 'Cottage cheese marinated in yogurt and Indian spices, roasted in tandoor.' },
-                { id: 2, title: 'Veg Samosa', category: 'starter', price: '₹150', img: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=600&q=80', desc: 'Crispy pastry filled with spiced potatoes and peas. Served with mint chutney.' },
-                { id: 3, title: 'Dal Makhani', category: 'main', price: '₹400', img: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=600&q=80', desc: 'Slow-cooked black lentils simmered overnight with tomatoes, butter, and cream.' },
-                { id: 4, title: 'Veg Biryani', category: 'main', price: '₹450', img: 'https://images.unsplash.com/photo-1633940597669-7c387e076634?auto=format&fit=crop&w=600&q=80', desc: 'Aromatic basmati rice cooked with mixed vegetables, saffron, and exotic spices.' },
-                { id: 5, title: 'Garlic Naan', category: 'bread', price: '₹120', img: 'https://images.unsplash.com/photo-1626074353765-517a681e40be?auto=format&fit=crop&w=600&q=80', desc: 'Soft and flaky flatbread topped with minced garlic and butter.' },
-                { id: 6, title: 'Gulab Jamun', category: 'dessert', price: '₹180', img: 'https://images.unsplash.com/photo-1593701463371-55db211b6d0c?auto=format&fit=crop&w=600&q=80', desc: 'Deep-fried milk dumplings soaked in cardamom flavored sugar syrup.' }
+                { id: 1, title: 'Paneer Tikka', category: 'starter', price: '₹350', img: 'file:///Users/gyan/.gemini/antigravity/brain/589b88d3-26b2-48e4-a1f6-cd19e6c63efa/paneer_tikka_1777952105958.png', desc: 'Cottage cheese marinated in yogurt and Indian spices, roasted in tandoor.' },
+                { id: 2, title: 'Veg Samosa', category: 'starter', price: '₹150', img: 'file:///Users/gyan/.gemini/antigravity/brain/589b88d3-26b2-48e4-a1f6-cd19e6c63efa/veg_samosa_1777952129504.png', desc: 'Crispy pastry filled with spiced potatoes and peas. Served with mint chutney.' },
+                { id: 3, title: 'Dal Makhani', category: 'main', price: '₹400', img: 'file:///Users/gyan/.gemini/antigravity/brain/589b88d3-26b2-48e4-a1f6-cd19e6c63efa/dal_makhani_1777952146738.png', desc: 'Slow-cooked black lentils simmered overnight with tomatoes, butter, and cream.' },
+                { id: 4, title: 'Veg Biryani', category: 'main', price: '₹450', img: 'file:///Users/gyan/.gemini/antigravity/brain/589b88d3-26b2-48e4-a1f6-cd19e6c63efa/veg_biryani_1777952164630.png', desc: 'Aromatic basmati rice cooked with mixed vegetables, saffron, and exotic spices.' },
+                { id: 5, title: 'Garlic Naan', category: 'bread', price: '₹120', img: 'file:///Users/gyan/.gemini/antigravity/brain/589b88d3-26b2-48e4-a1f6-cd19e6c63efa/garlic_naan_1777952179686.png', desc: 'Soft and flaky flatbread topped with minced garlic and butter.' },
+                { id: 6, title: 'Gulab Jamun', category: 'dessert', price: '₹180', img: 'file:///Users/gyan/.gemini/antigravity/brain/589b88d3-26b2-48e4-a1f6-cd19e6c63efa/gulab_jamun_1777952196329.png', desc: 'Deep-fried milk dumplings soaked in cardamom flavored sugar syrup.' }
             ];
 
             const galleryImages = [
-                'https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?auto=format&fit=crop&w=600&q=80',
-                'https://images.unsplash.com/photo-1631452180519-c014fe946bc0?auto=format&fit=crop&w=600&q=80',
-                'https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=600&q=80',
-                'https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=600&q=80',
-                'https://images.unsplash.com/photo-1633940597669-7c387e076634?auto=format&fit=crop&w=600&q=80',
-                'https://images.unsplash.com/photo-1593701463371-55db211b6d0c?auto=format&fit=crop&w=600&q=80'
+                'file:///Users/gyan/.gemini/antigravity/brain/589b88d3-26b2-48e4-a1f6-cd19e6c63efa/veg_thali_1777952211335.png',
+                'file:///Users/gyan/.gemini/antigravity/brain/589b88d3-26b2-48e4-a1f6-cd19e6c63efa/paneer_tikka_1777952105958.png',
+                'file:///Users/gyan/.gemini/antigravity/brain/589b88d3-26b2-48e4-a1f6-cd19e6c63efa/dal_makhani_1777952146738.png',
+                'file:///Users/gyan/.gemini/antigravity/brain/589b88d3-26b2-48e4-a1f6-cd19e6c63efa/veg_samosa_1777952129504.png',
+                'file:///Users/gyan/.gemini/antigravity/brain/589b88d3-26b2-48e4-a1f6-cd19e6c63efa/veg_biryani_1777952164630.png',
+                'file:///Users/gyan/.gemini/antigravity/brain/589b88d3-26b2-48e4-a1f6-cd19e6c63efa/gulab_jamun_1777952196329.png'
             ];
 
             const reviewsData = [
