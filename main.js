@@ -1,18 +1,16 @@
-// Completely scrapped WebGL. Using Vanilla Tilt to provide actual DOM-based 3D interactions.
-
 document.addEventListener("DOMContentLoaded", () => {
+    const nav = document.querySelector('.luxury-nav');
     
-    // Initialize VanillaTilt for the menu cards
-    // This gives a highly realistic 3D physical effect to the food cards!
-    VanillaTilt.init(document.querySelectorAll(".tilt-card"), {
-        max: 15,            // Maximum tilt rotation (degrees)
-        speed: 400,         // Speed of the enter/exit transition
-        glare: true,        // Add a glass-like glare effect
-        "max-glare": 0.3,   // Max glare opacity
-        scale: 1.05         // Slightly zoom in when hovering
+    // Elegant navbar background fade on scroll
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            nav.classList.add('scrolled');
+        } else {
+            nav.classList.remove('scrolled');
+        }
     });
 
-    // Smooth scrolling for navigation links
+    // Smooth scrolling for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
@@ -21,5 +19,4 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
     });
-
 });
