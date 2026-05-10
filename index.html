@@ -3,128 +3,203 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vrindavan | Ultra-Premium Pure Veg Kitchen</title>
+    <title>Vrindavan | Pure Veg Kitchen</title>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    
-    <!-- Import Maps for Three.js -->
-    <script type="importmap">
-        {
-            "imports": {
-                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
-            }
-        }
-    </script>
 </head>
 <body>
-    <div id="loader">
-        <div class="loader-text">Vrindavan</div>
-        <div class="loader-bar"></div>
-    </div>
-
-    <!-- WebGL Canvas Background -->
-    <canvas id="webgl-canvas"></canvas>
-
-    <!-- UI Overlay -->
-    <main id="ui-layer">
-        <nav class="glass-nav">
-            <div class="logo">Vrindavan</div>
-            <ul class="nav-links">
-                <li><a href="#hero">Experience</a></li>
-                <li><a href="#about">Philosophy</a></li>
-                <li><a href="#menu">Menu</a></li>
-                <li><a href="#booking">Reserve</a></li>
-            </ul>
-        </nav>
-
-        <section id="hero" class="section">
-            <div class="hero-content glass-panel">
-                <h1 class="hero-title">Divine Purity.</h1>
-                <p class="hero-subtitle">An ultra-realistic, multi-sensory pure vegetarian dining experience.</p>
-                <button class="btn-glow" onclick="document.getElementById('menu').scrollIntoView({behavior: 'smooth'})">Explore Menu</button>
-            </div>
-        </section>
-
-        <section id="about" class="section right-align">
-            <div class="about-content glass-panel">
-                <h2 class="section-title">The Art of Pure Food</h2>
-                <p>We blend ancient traditions with avant-garde culinary techniques to present pure vegetarian cuisine like never before. Every ingredient is ethically sourced, treated with reverence, and transformed into a masterpiece.</p>
-            </div>
-        </section>
-
-        <section id="menu" class="section">
-            <div class="menu-container glass-panel">
-                <h2 class="section-title text-center">Curated Offerings</h2>
-                <h3 style="color: var(--gold-light); margin-bottom: 20px; font-family: 'Cinzel', serif;">Mains & Rice</h3>
-                <div class="menu-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 0; margin-bottom: 40px;">
-                    <div class="menu-item"><div class="menu-item-info"><h3>Dal Makhani</h3><span class="price">₹70</span></div></div>
-                    <div class="menu-item"><div class="menu-item-info"><h3>Kadhai Paneer</h3><span class="price">₹50</span></div></div>
-                    <div class="menu-item"><div class="menu-item-info"><h3>Dal Fry</h3><span class="price">₹30</span></div></div>
-                    <div class="menu-item"><div class="menu-item-info"><h3>Mix Veg</h3><span class="price">₹20</span></div></div>
-                    <div class="menu-item"><div class="menu-item-info"><h3>Veg Biryani</h3><span class="price">₹40</span></div></div>
-                    <div class="menu-item"><div class="menu-item-info"><h3>Veg Pulao</h3><span class="price">₹30</span></div></div>
-                    <div class="menu-item"><div class="menu-item-info"><h3>Jeera Rice</h3><span class="price">₹30</span></div></div>
-                </div>
-
-                <h3 style="color: var(--gold-light); margin-bottom: 20px; font-family: 'Cinzel', serif;">Premium Thalis</h3>
-                <div class="menu-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 0; margin-bottom: 40px;">
-                    <div class="menu-item"><div class="menu-item-info"><h3>Sada Thali</h3><span class="price">₹50</span></div></div>
-                    <div class="menu-item"><div class="menu-item-info"><h3>Deluxe Thali</h3><span class="price">₹80</span></div></div>
-                    <div class="menu-item"><div class="menu-item-info"><h3>Premium Thali</h3><span class="price">₹140</span></div></div>
-                    <div class="menu-item"><div class="menu-item-info"><h3>Maharaja Thali</h3><span class="price">₹200</span></div></div>
-                </div>
-
-                <h3 style="color: var(--gold-light); margin-bottom: 20px; font-family: 'Cinzel', serif;">Snacks & Sweets</h3>
-                <div class="menu-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 0;">
-                    <div class="menu-item"><div class="menu-item-info"><h3>Samose</h3><span class="price">₹5</span></div></div>
-                    <div class="menu-item"><div class="menu-item-info"><h3>Chai</h3><span class="price">₹5</span></div></div>
-                    <div class="menu-item"><div class="menu-item-info"><h3>Bread Pakoda</h3><span class="price">₹10</span></div></div>
-                    <div class="menu-item"><div class="menu-item-info"><h3>Patties</h3><span class="price">₹15</span></div></div>
-                    <div class="menu-item"><div class="menu-item-info"><h3>Gulab Jamun</h3><span class="price">₹15</span></div></div>
-                    <div class="menu-item"><div class="menu-item-info"><h3>Rasgulle</h3><span class="price">₹10</span></div></div>
-                    <div class="menu-item"><div class="menu-item-info"><h3>Chene Wale Rasgulle</h3><span class="price">₹15</span></div></div>
-                    <div class="menu-item"><div class="menu-item-info"><h3>Rasmalai</h3><span class="price">₹25</span></div></div>
-                    <div class="menu-item"><div class="menu-item-info"><h3>Pastry</h3><span class="price">₹20</span></div></div>
-                    <div class="menu-item"><div class="menu-item-info"><h3>Cake</h3><span class="price">₹30</span></div></div>
-                </div>
-            </div>
-        </section>
-
-        <section id="booking" class="section center-align">
-            <div class="booking-content glass-panel">
-                <h2 class="section-title">Reserve Your Table</h2>
-                <form class="luxury-form" onsubmit="event.preventDefault(); alert('Reservation Requested! We will contact you shortly.');">
-                    <input type="text" placeholder="Your Name" required>
-                    <input type="date" required>
-                    <input type="time" required>
-                    <input type="number" placeholder="Number of Guests" min="1" max="10" required>
-                    <button type="submit" class="btn-glow w-100">Confirm Reservation</button>
-                </form>
-            </div>
-        </section>
-        
-        <footer>
-            <div class="glass-panel footer-content">
-                <h2>Vrindavan</h2>
-                <p style="margin-top: 10px; color: var(--text-muted);">Where tradition meets the future of fine dining.</p>
-                <div style="margin-top: 20px; font-size: 1.5rem; color: var(--gold); display: flex; gap: 20px; justify-content: center;">
-                    <i class="fa-brands fa-instagram"></i>
-                    <i class="fa-brands fa-twitter"></i>
-                </div>
-            </div>
-        </footer>
-    </main>
-
-    <!-- GSAP Libraries -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     
-    <!-- App Entry -->
-    <script type="module" src="main.js"></script>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">Vrindavan</div>
+        <ul class="nav-links">
+            <li><a href="#hero">Home</a></li>
+            <li><a href="#menu">Our Menu</a></li>
+            <li><a href="#booking">Book Table</a></li>
+        </ul>
+    </nav>
+
+    <!-- Photorealistic Hero Section -->
+    <section id="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">Divine Pure Veg.</h1>
+            <p class="hero-subtitle">Experience authentic Indian street-style flavors in an ultra-premium setting.</p>
+            <a href="#menu" class="btn">Explore Menu</a>
+        </div>
+    </section>
+
+    <!-- Menu Section -->
+    <section id="menu">
+        <div class="container">
+            <div class="section-header">
+                <h2>Our Menu</h2>
+                <p>Authentic taste, unbeatable prices. 100% Pure Vegetarian.</p>
+            </div>
+
+            <div class="menu-grid" id="menu-grid">
+                <!-- Mains & Rice -->
+                <div class="menu-card tilt-card">
+                    <img src="https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=500&q=80" alt="Dal Makhani" class="menu-img">
+                    <div class="menu-info">
+                        <h3>Dal Makhani</h3>
+                        <div class="price">₹70</div>
+                    </div>
+                </div>
+                <div class="menu-card tilt-card">
+                    <img src="https://images.unsplash.com/photo-1631452180519-c014fe946bc0?auto=format&fit=crop&w=500&q=80" alt="Kadhai Paneer" class="menu-img">
+                    <div class="menu-info">
+                        <h3>Kadhai Paneer</h3>
+                        <div class="price">₹50</div>
+                    </div>
+                </div>
+                <div class="menu-card tilt-card">
+                    <img src="https://images.unsplash.com/photo-1563379926898-05f452556048?auto=format&fit=crop&w=500&q=80" alt="Veg Pulao" class="menu-img">
+                    <div class="menu-info">
+                        <h3>Veg Pulao</h3>
+                        <div class="price">₹30</div>
+                    </div>
+                </div>
+                <div class="menu-card tilt-card">
+                    <img src="https://images.unsplash.com/photo-1563379926898-05f452556048?auto=format&fit=crop&w=500&q=80" alt="Veg Biryani" class="menu-img">
+                    <div class="menu-info">
+                        <h3>Veg Biryani</h3>
+                        <div class="price">₹40</div>
+                    </div>
+                </div>
+                <div class="menu-card tilt-card">
+                    <img src="https://images.unsplash.com/photo-1606491956689-2ea866880c84?auto=format&fit=crop&w=500&q=80" alt="Mix Veg" class="menu-img">
+                    <div class="menu-info">
+                        <h3>Mix Veg</h3>
+                        <div class="price">₹20</div>
+                    </div>
+                </div>
+                <div class="menu-card tilt-card">
+                    <img src="https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=500&q=80" alt="Dal Fry" class="menu-img">
+                    <div class="menu-info">
+                        <h3>Dal Fry</h3>
+                        <div class="price">₹30</div>
+                    </div>
+                </div>
+                <div class="menu-card tilt-card">
+                    <img src="https://images.unsplash.com/photo-1563379926898-05f452556048?auto=format&fit=crop&w=500&q=80" alt="Jeera Rice" class="menu-img">
+                    <div class="menu-info">
+                        <h3>Jeera Rice</h3>
+                        <div class="price">₹30</div>
+                    </div>
+                </div>
+
+                <!-- Thalis -->
+                <div class="menu-card tilt-card">
+                    <img src="https://images.unsplash.com/photo-1606491956689-2ea866880c84?auto=format&fit=crop&w=500&q=80" alt="Sada Thali" class="menu-img">
+                    <div class="menu-info">
+                        <h3>Sada Thali</h3>
+                        <div class="price">₹50</div>
+                    </div>
+                </div>
+                <div class="menu-card tilt-card">
+                    <img src="https://images.unsplash.com/photo-1606491956689-2ea866880c84?auto=format&fit=crop&w=500&q=80" alt="Deluxe Thali" class="menu-img">
+                    <div class="menu-info">
+                        <h3>Deluxe Thali</h3>
+                        <div class="price">₹80</div>
+                    </div>
+                </div>
+                <div class="menu-card tilt-card">
+                    <img src="https://images.unsplash.com/photo-1606491956689-2ea866880c84?auto=format&fit=crop&w=500&q=80" alt="Premium Thali" class="menu-img">
+                    <div class="menu-info">
+                        <h3>Premium Thali</h3>
+                        <div class="price">₹140</div>
+                    </div>
+                </div>
+                <div class="menu-card tilt-card">
+                    <img src="https://images.unsplash.com/photo-1606491956689-2ea866880c84?auto=format&fit=crop&w=500&q=80" alt="Maharaja Thali" class="menu-img">
+                    <div class="menu-info">
+                        <h3>Maharaja Thali</h3>
+                        <div class="price">₹200</div>
+                    </div>
+                </div>
+
+                <!-- Snacks & Sweets -->
+                <div class="menu-card tilt-card">
+                    <img src="https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=500&q=80" alt="Samose" class="menu-img">
+                    <div class="menu-info">
+                        <h3>Samose</h3>
+                        <div class="price">₹5</div>
+                    </div>
+                </div>
+                <div class="menu-card tilt-card">
+                    <img src="https://images.unsplash.com/photo-1579899387431-7299b0c79f94?auto=format&fit=crop&w=500&q=80" alt="Chai" class="menu-img">
+                    <div class="menu-info">
+                        <h3>Chai</h3>
+                        <div class="price">₹5</div>
+                    </div>
+                </div>
+                <div class="menu-card tilt-card">
+                    <img src="https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=500&q=80" alt="Bread Pakoda" class="menu-img">
+                    <div class="menu-info">
+                        <h3>Bread Pakoda</h3>
+                        <div class="price">₹10</div>
+                    </div>
+                </div>
+                <div class="menu-card tilt-card">
+                    <img src="https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=500&q=80" alt="Patties" class="menu-img">
+                    <div class="menu-info">
+                        <h3>Patties</h3>
+                        <div class="price">₹15</div>
+                    </div>
+                </div>
+                <div class="menu-card tilt-card">
+                    <img src="https://images.unsplash.com/photo-1593504049359-715339e163be?auto=format&fit=crop&w=500&q=80" alt="Gulab Jamun" class="menu-img">
+                    <div class="menu-info">
+                        <h3>Gulab Jamun</h3>
+                        <div class="price">₹15</div>
+                    </div>
+                </div>
+                <div class="menu-card tilt-card">
+                    <img src="https://images.unsplash.com/photo-1593504049359-715339e163be?auto=format&fit=crop&w=500&q=80" alt="Rasgulle" class="menu-img">
+                    <div class="menu-info">
+                        <h3>Rasgulle</h3>
+                        <div class="price">₹10</div>
+                    </div>
+                </div>
+                <div class="menu-card tilt-card">
+                    <img src="https://images.unsplash.com/photo-1593504049359-715339e163be?auto=format&fit=crop&w=500&q=80" alt="Chene Wale Rasgulle" class="menu-img">
+                    <div class="menu-info">
+                        <h3>Chene Wale Rasgulle</h3>
+                        <div class="price">₹15</div>
+                    </div>
+                </div>
+                <div class="menu-card tilt-card">
+                    <img src="https://images.unsplash.com/photo-1593504049359-715339e163be?auto=format&fit=crop&w=500&q=80" alt="Rasmalai" class="menu-img">
+                    <div class="menu-info">
+                        <h3>Rasmalai</h3>
+                        <div class="price">₹25</div>
+                    </div>
+                </div>
+                <div class="menu-card tilt-card">
+                    <img src="https://images.unsplash.com/photo-1593504049359-715339e163be?auto=format&fit=crop&w=500&q=80" alt="Pastry" class="menu-img">
+                    <div class="menu-info">
+                        <h3>Pastry</h3>
+                        <div class="price">₹20</div>
+                    </div>
+                </div>
+                <div class="menu-card tilt-card">
+                    <img src="https://images.unsplash.com/photo-1593504049359-715339e163be?auto=format&fit=crop&w=500&q=80" alt="Cake" class="menu-img">
+                    <div class="menu-info">
+                        <h3>Cake</h3>
+                        <div class="price">₹30</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scripts -->
+    <!-- Vanilla Tilt for 3D interactions -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>
