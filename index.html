@@ -3,143 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vrindavan | Pure Veg Kitchen</title>
+    <title>Vrindavan | Ultra Premium Dark</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    
+    <!-- Three.js and VanillaTilt -->
+    <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.150.1/build/three.module.js"
+        }
+      }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 </head>
 <body>
 
-    <!-- Animated Aurora Background -->
-    <div class="aurora-bg">
-        <div class="orb orb-1"></div>
-        <div class="orb orb-2"></div>
-        <div class="orb orb-3"></div>
+    <!-- 3D Canvas -->
+    <canvas id="webgl-canvas"></canvas>
+
+    <!-- Overlay UI -->
+    <div id="ui-layer">
+        
+        <nav class="premium-nav">
+            <div class="logo">VRINDAVAN</div>
+            <ul class="nav-links">
+                <li><a href="#hero">Home</a></li>
+                <li><a href="#menu">Menu</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+
+        <header id="hero" class="section hero">
+            <div class="hero-content">
+                <h1 class="hero-title">A Symphony in Dark.</h1>
+                <p class="hero-subtitle">The absolute pinnacle of pure vegetarian luxury.</p>
+                <a href="#menu" class="gold-btn">Discover the Menu</a>
+            </div>
+        </header>
+
+        <section id="menu" class="section menu-section">
+            <div class="section-title">
+                <h2>Our Collection</h2>
+                <div class="gold-line"></div>
+            </div>
+
+            <div class="menu-grid">
+                
+                <div class="menu-card tilt-card">
+                    <div class="img-wrapper"><img src="menu.img/DAL-MAKHNI.jpeg" alt="Dal Makhni"></div>
+                    <div class="item-info">
+                        <h3>Dal Makhni</h3>
+                        <span class="price">₹70</span>
+                    </div>
+                </div>
+
+                <div class="menu-card tilt-card">
+                    <div class="img-wrapper"><img src="menu.img/KADHAI PANEER.jpeg" alt="Kadhai Paneer"></div>
+                    <div class="item-info">
+                        <h3>Kadhai Paneer</h3>
+                        <span class="price">₹50</span>
+                    </div>
+                </div>
+
+                <div class="menu-card tilt-card">
+                    <div class="img-wrapper"><img src="menu.img/VEG-PULAO.jpeg" alt="Veg Pulao"></div>
+                    <div class="item-info">
+                        <h3>Veg Pulao</h3>
+                        <span class="price">₹30</span>
+                    </div>
+                </div>
+
+                <div class="menu-card tilt-card">
+                    <div class="img-wrapper"><img src="menu.img/VEG BIRYANI.jpeg" alt="Veg Biryani"></div>
+                    <div class="item-info">
+                        <h3>Veg Biryani</h3>
+                        <span class="price">₹40</span>
+                    </div>
+                </div>
+
+                <div class="menu-card tilt-card">
+                    <div class="img-wrapper"><img src="menu.img/MASALA DOSA.jpeg" alt="Masala Dosa"></div>
+                    <div class="item-info">
+                        <h3>Masala Dosa</h3>
+                        <span class="price">₹50</span>
+                    </div>
+                </div>
+
+                <div class="menu-card tilt-card">
+                    <div class="img-wrapper"><img src="menu.img/SADA THALI .jpeg" alt="Sada Thali"></div>
+                    <div class="item-info">
+                        <h3>Sada Thali</h3>
+                        <span class="price">₹50</span>
+                    </div>
+                </div>
+
+                <div class="menu-card tilt-card">
+                    <div class="img-wrapper"><img src="menu.img/DELUXE THALI .jpeg" alt="Deluxe Thali"></div>
+                    <div class="item-info">
+                        <h3>Deluxe Thali</h3>
+                        <span class="price">₹80</span>
+                    </div>
+                </div>
+
+                <div class="menu-card tilt-card">
+                    <div class="img-wrapper"><img src="menu.img/MAHARAJA THALI.jpeg" alt="Maharaja Thali"></div>
+                    <div class="item-info">
+                        <h3>Maharaja Thali</h3>
+                        <span class="price">₹200</span>
+                    </div>
+                </div>
+
+                <div class="menu-card tilt-card">
+                    <div class="img-wrapper"><img src="menu.img/CHAI.jpeg" alt="Chai"></div>
+                    <div class="item-info">
+                        <h3>Chai</h3>
+                        <span class="price">₹5</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
     </div>
 
-    <!-- Navigation -->
-    <nav class="glass-nav">
-        <div class="logo">VRINDAVAN</div>
-        <ul class="nav-links">
-            <li><a href="#hero">Home</a></li>
-            <li><a href="#menu">Menu</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
-    </nav>
-
-    <!-- Hero Section -->
-    <header id="hero" class="hero section">
-        <div class="hero-content glass-card slide-up">
-            <h1>Pure. Authentic. Affordable.</h1>
-            <p>Experience the true taste of Indian cuisine crafted with devotion.</p>
-            <a href="#menu" class="glow-btn">View Menu</a>
-        </div>
-    </header>
-
-    <!-- Menu Section -->
-    <section id="menu" class="menu-section section">
-        <div class="section-header slide-up">
-            <h2>Our Menu</h2>
-            <p>Freshly prepared exactly how you like it.</p>
-        </div>
-
-        <div class="menu-grid">
-            <!-- Items exactly matching the menu.img folder -->
-            
-            <div class="menu-card glass-card slide-up">
-                <div class="card-img">
-                    <img src="menu.img/DAL-MAKHNI.jpeg" alt="Dal Makhni">
-                </div>
-                <div class="card-info">
-                    <h3>Dal Makhni</h3>
-                    <div class="price">₹70</div>
-                </div>
-            </div>
-
-            <div class="menu-card glass-card slide-up">
-                <div class="card-img">
-                    <img src="menu.img/KADHAI PANEER.jpeg" alt="Kadhai Paneer">
-                </div>
-                <div class="card-info">
-                    <h3>Kadhai Paneer</h3>
-                    <div class="price">₹50</div>
-                </div>
-            </div>
-
-            <div class="menu-card glass-card slide-up">
-                <div class="card-img">
-                    <img src="menu.img/VEG-PULAO.jpeg" alt="Veg Pulao">
-                </div>
-                <div class="card-info">
-                    <h3>Veg Pulao</h3>
-                    <div class="price">₹30</div>
-                </div>
-            </div>
-
-            <div class="menu-card glass-card slide-up">
-                <div class="card-img">
-                    <img src="menu.img/VEG BIRYANI.jpeg" alt="Veg Biryani">
-                </div>
-                <div class="card-info">
-                    <h3>Veg Biryani</h3>
-                    <div class="price">₹40</div>
-                </div>
-            </div>
-
-            <div class="menu-card glass-card slide-up">
-                <div class="card-img">
-                    <img src="menu.img/MASALA DOSA.jpeg" alt="Masala Dosa">
-                </div>
-                <div class="card-info">
-                    <h3>Masala Dosa</h3>
-                    <div class="price">₹50</div>
-                </div>
-            </div>
-
-            <div class="menu-card glass-card slide-up">
-                <div class="card-img">
-                    <img src="menu.img/SADA THALI .jpeg" alt="Sada Thali">
-                </div>
-                <div class="card-info">
-                    <h3>Sada Thali</h3>
-                    <div class="price">₹50</div>
-                </div>
-            </div>
-
-            <div class="menu-card glass-card slide-up">
-                <div class="card-img">
-                    <img src="menu.img/DELUXE THALI .jpeg" alt="Deluxe Thali">
-                </div>
-                <div class="card-info">
-                    <h3>Deluxe Thali</h3>
-                    <div class="price">₹80</div>
-                </div>
-            </div>
-
-            <div class="menu-card glass-card slide-up">
-                <div class="card-img">
-                    <img src="menu.img/MAHARAJA THALI.jpeg" alt="Maharaja Thali">
-                </div>
-                <div class="card-info">
-                    <h3>Maharaja Thali</h3>
-                    <div class="price">₹200</div>
-                </div>
-            </div>
-
-            <div class="menu-card glass-card slide-up">
-                <div class="card-img">
-                    <img src="menu.img/CHAI.jpeg" alt="Chai">
-                </div>
-                <div class="card-info">
-                    <h3>Chai</h3>
-                    <div class="price">₹5</div>
-                </div>
-            </div>
-
-        </div>
-    </section>
-
-    <script src="main.js"></script>
+    <script type="module" src="main.js"></script>
 </body>
 </html>
