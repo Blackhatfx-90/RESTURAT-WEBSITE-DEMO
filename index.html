@@ -1,310 +1,132 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vrindavan – The Pure Veg Kitchen</title>
+    <title>Vrindavan | Ultra-Premium Pure Veg Kitchen</title>
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <!-- Font Awesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <link rel="stylesheet" href="style.css">
+    
+    <!-- Import Maps for Three.js -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
 </head>
 <body>
-
-    <!-- Loader -->
     <div id="loader">
-        <div class="spinner"></div>
-        <h2 style="color: var(--accent-gold); letter-spacing: 2px;">VRINDAVAN</h2>
-        <p style="font-size: 12px; opacity: 0.7; margin-top: 10px;">Awakening the Senses...</p>
+        <div class="loader-text">Vrindavan</div>
+        <div class="loader-bar"></div>
     </div>
 
-    <!-- Navbar -->
-    <nav>
-        <a href="#" class="logo">
-            <i class="fa-solid fa-leaf"></i> Vrindavan
-        </a>
-        <ul class="nav-links">
-            <li><a href="#hero" class="active">Home</a></li>
-            <li><a href="#about">Our Story</a></li>
-            <li><a href="#menu">Menu</a></li>
-            <li><a href="#booking">Book Table</a></li>
-            <li><a href="#delivery">Order Online</a></li>
-            <li><a href="#gallery">Gallery</a></li>
-        </ul>
-        <div class="nav-actions">
-            <button class="theme-toggle" id="themeBtn" aria-label="Toggle Theme">
-                <i class="fa-solid fa-moon"></i>
-            </button>
-            <button class="cart-btn" aria-label="Cart">
-                <i class="fa-solid fa-shopping-bag"></i>
-                <span class="cart-badge" id="cartCount">0</span>
-            </button>
-            <button class="mobile-menu-btn" id="mobileMenuBtn">
-                <i class="fa-solid fa-bars"></i>
-            </button>
-        </div>
-    </nav>
+    <!-- WebGL Canvas Background -->
+    <canvas id="webgl-canvas"></canvas>
 
-    <!-- Hero Section -->
-    <section id="hero">
-        <div class="hero-bg-overlay"></div>
-        <div class="hero-content">
-            <h1 class="hero-title">The Pure Veg Kitchen</h1>
-            <p class="hero-subtitle">Experience the divine flavors of authentic Indian vegetarian cuisine in a premium setting.</p>
-            <div class="hero-btns">
-                <a href="#booking" class="btn btn-primary">Book a Table</a>
-                <a href="#delivery" class="btn btn-outline">Order Now</a>
+    <!-- UI Overlay -->
+    <main id="ui-layer">
+        <nav class="glass-nav">
+            <div class="logo">Vrindavan</div>
+            <ul class="nav-links">
+                <li><a href="#hero">Experience</a></li>
+                <li><a href="#about">Philosophy</a></li>
+                <li><a href="#menu">Menu</a></li>
+                <li><a href="#booking">Reserve</a></li>
+            </ul>
+        </nav>
+
+        <section id="hero" class="section">
+            <div class="hero-content glass-panel">
+                <h1 class="hero-title">Divine Purity.</h1>
+                <p class="hero-subtitle">An ultra-realistic, multi-sensory pure vegetarian dining experience.</p>
+                <button class="btn-glow" onclick="document.getElementById('menu').scrollIntoView({behavior: 'smooth'})">Explore Menu</button>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- About Section -->
-    <section id="about">
-        <div class="about-model">
-            <img src="file:///Users/gyan/.gemini/antigravity/brain/589b88d3-26b2-48e4-a1f6-cd19e6c63efa/veg_thali_1777952211335.png" alt="Authentic Pure Veg Thali" class="real-thali-img">
-        </div>
-        <div class="about-text">
-            <span class="section-subtitle">Our Story</span>
-            <h2 class="section-title">A Symphony of Spices</h2>
-            <p>At Vrindavan, we believe that food is not just nourishment, but a divine offering. Rooted in ancient culinary traditions, our kitchen strictly adheres to pure vegetarian principles, ensuring every dish is prepared with the utmost purity and love.</p>
-            <p>From the fiery tandoors of Punjab to the subtle curries of the South, our master chefs orchestrate a symphony of flavors using only the freshest, hand-picked ingredients and hand-ground spices.</p>
-            <a href="#menu" class="btn btn-primary" style="margin-top: 20px;">Explore Menu</a>
-        </div>
-    </section>
-
-    <!-- Menu Section -->
-    <section id="menu">
-        <div class="section-header">
-            <span class="section-subtitle">Divine Offerings</span>
-            <h2 class="section-title">Our Menu</h2>
-        </div>
-        
-        <div class="menu-filters">
-            <button class="filter-btn active" data-filter="all">All</button>
-            <button class="filter-btn" data-filter="starter">Starters</button>
-            <button class="filter-btn" data-filter="main">Main Course</button>
-            <button class="filter-btn" data-filter="bread">Breads</button>
-            <button class="filter-btn" data-filter="dessert">Desserts</button>
-        </div>
-
-        <div class="menu-grid" id="menuGrid">
-            <!-- Menu items generated by JS -->
-        </div>
-    </section>
-
-    <!-- Booking Section -->
-    <section id="booking">
-        <div class="booking-container">
-            <div class="booking-info">
-                <span class="section-subtitle">Reservation</span>
-                <h2 class="section-title">Reserve Your Experience</h2>
-                <p style="margin-top: 20px; line-height: 1.8; opacity: 0.9;">Secure your table at Vrindavan. Whether it's a romantic dinner, a family gathering, or a corporate event, we ensure a memorable dining experience.</p>
-                <div style="margin-top: 40px;">
-                    <h4 style="color: var(--accent-gold); margin-bottom: 15px;"><i class="fa-regular fa-clock"></i> Opening Hours</h4>
-                    <p>Mon - Fri: 11:00 AM - 10:30 PM</p>
-                    <p>Sat - Sun: 11:00 AM - 11:30 PM</p>
-                </div>
+        <section id="about" class="section right-align">
+            <div class="about-content glass-panel">
+                <h2 class="section-title">The Art of Pure Food</h2>
+                <p>We blend ancient traditions with avant-garde culinary techniques to present pure vegetarian cuisine like never before. Every ingredient is ethically sourced, treated with reverence, and transformed into a masterpiece.</p>
             </div>
-            <div class="booking-form-wrap">
-                <form class="booking-form" id="bookingForm" novalidate>
-                    <div class="form-grid">
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="bookName" placeholder="Full Name" required>
-                            <span class="error-msg">Please enter your name</span>
-                        </div>
-                        <div class="input-group">
-                            <input type="tel" class="form-control" id="bookPhone" placeholder="Phone Number" pattern="[0-9]{10}" required>
-                            <span class="error-msg">Enter valid 10-digit number</span>
-                        </div>
-                        <div class="input-group">
-                            <input type="date" class="form-control" id="bookDate" required>
-                            <span class="error-msg">Please select a date</span>
-                        </div>
-                        <div class="input-group">
-                            <select class="form-control" id="bookTime" required>
-                                <option value="">Time</option>
-                                <option value="12:00">12:00 PM</option>
-                                <option value="13:00">01:00 PM</option>
-                                <option value="19:00">07:00 PM</option>
-                                <option value="20:00">08:00 PM</option>
-                                <option value="21:00">09:00 PM</option>
-                            </select>
-                            <span class="error-msg">Please select a time</span>
-                        </div>
-                        <div class="input-group full">
-                            <input type="number" class="form-control" id="bookGuests" placeholder="Number of Guests (1-10)" min="1" max="10" required>
-                            <span class="error-msg">Enter a valid number (1-10)</span>
-                        </div>
-                        <div class="input-group full">
-                            <textarea class="form-control" id="bookReq" placeholder="Special Requests (Optional)"></textarea>
+        </section>
+
+        <section id="menu" class="section">
+            <div class="menu-container glass-panel">
+                <h2 class="section-title text-center">Curated Offerings</h2>
+                <div class="menu-grid">
+                    <div class="menu-item">
+                        <div class="menu-item-img" style="background-image: url('https://images.unsplash.com/photo-1626779836371-34e8fa6b6e4e?auto=format&fit=crop&w=500&q=80')"></div>
+                        <div class="menu-item-info">
+                            <h3>Truffle Dal Bukhara</h3>
+                            <p>Slow-cooked black lentils, charcoal smoked, accented with white truffle essence.</p>
+                            <span class="price">₹850</span>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">Confirm Booking</button>
+                    <div class="menu-item">
+                        <div class="menu-item-img" style="background-image: url('https://images.unsplash.com/photo-1631515243349-e0cb75fb8d3a?auto=format&fit=crop&w=500&q=80')"></div>
+                        <div class="menu-item-info">
+                            <h3>Saffron Paneer Mille-Feuille</h3>
+                            <p>Layered cottage cheese with Kashmiri saffron reduction and pistachio dust.</p>
+                            <span class="price">₹950</span>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-img" style="background-image: url('https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=500&q=80')"></div>
+                        <div class="menu-item-info">
+                            <h3>Smoked Samosa Tart</h3>
+                            <p>Deconstructed potato and pea tartlet, mint spherification, tamarind glaze.</p>
+                            <span class="price">₹550</span>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-img" style="background-image: url('https://images.unsplash.com/photo-1589301760014-d929f39ce9b0?auto=format&fit=crop&w=500&q=80')"></div>
+                        <div class="menu-item-info">
+                            <h3>24K Gold Gulab Jamun</h3>
+                            <p>Artisanal milk dumplings, rose-infused syrup, pure edible gold leaf.</p>
+                            <span class="price">₹750</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="booking" class="section center-align">
+            <div class="booking-content glass-panel">
+                <h2 class="section-title">Reserve Your Table</h2>
+                <form class="luxury-form" onsubmit="event.preventDefault(); alert('Reservation Requested! We will contact you shortly.');">
+                    <input type="text" placeholder="Your Name" required>
+                    <input type="date" required>
+                    <input type="time" required>
+                    <input type="number" placeholder="Number of Guests" min="1" max="10" required>
+                    <button type="submit" class="btn-glow w-100">Confirm Reservation</button>
                 </form>
             </div>
-        </div>
-    </section>
-
-    <!-- Delivery Section -->
-    <section id="delivery">
-        <div class="section-header">
-            <span class="section-subtitle">At Your Doorstep</span>
-            <h2 class="section-title">Home Delivery</h2>
-        </div>
+        </section>
         
-        <div style="max-width: 800px; margin: 0 auto; background: var(--nav-bg); padding: 40px; border-radius: 15px; border: 1px solid var(--border-color);">
-            <form id="deliveryForm">
-                <div class="form-grid">
-                    <div class="input-group">
-                        <input type="text" class="form-control" id="delName" placeholder="Name" required>
-                    </div>
-                    <div class="input-group">
-                        <input type="tel" class="form-control" id="delPhone" placeholder="Phone" required>
-                    </div>
-                    <div class="input-group full">
-                        <textarea class="form-control" id="delAddress" placeholder="Complete Delivery Address" required style="min-height: 80px;"></textarea>
-                    </div>
-                </div>
-                <div style="margin: 20px 0; padding: 15px; background: var(--card-bg); border-radius: 8px;">
-                    <h4 style="color: var(--accent-gold); margin-bottom: 10px;">Cart Summary</h4>
-                    <p id="checkoutItems" style="font-size: 14px; opacity: 0.8;">Cart is empty. Add items from the menu.</p>
-                </div>
-                <button type="submit" class="btn btn-primary" id="placeOrderBtn" style="width: 100%;" disabled>Place Order</button>
-            </form>
-
-            <div class="delivery-tracker" id="deliveryTracker">
-                <h3 style="text-align: center; margin-bottom: 30px; color: var(--accent-gold);">Order Track: <span id="trackId"></span></h3>
-                <div class="tracker-steps">
-                    <div class="tracker-progress" id="trackProgress"></div>
-                    <div class="step active" id="step1">
-                        <div class="step-icon"><i class="fa-solid fa-check"></i></div>
-                        <p>Placed</p>
-                    </div>
-                    <div class="step" id="step2">
-                        <div class="step-icon"><i class="fa-solid fa-fire-burner"></i></div>
-                        <p>Preparing</p>
-                    </div>
-                    <div class="step" id="step3">
-                        <div class="step-icon"><i class="fa-solid fa-box"></i></div>
-                        <p>Packed</p>
-                    </div>
-                    <div class="step" id="step4">
-                        <div class="step-icon"><i class="fa-solid fa-motorcycle"></i></div>
-                        <p>On the Way</p>
-                    </div>
-                    <div class="step" id="step5">
-                        <div class="step-icon"><i class="fa-solid fa-house-chimney"></i></div>
-                        <p>Delivered</p>
-                    </div>
-                </div>
-                <p class="est-time">Estimated Delivery: <strong style="color: var(--accent-saffron);">35–45 mins</strong></p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Gallery Section -->
-    <section id="gallery">
-        <div class="section-header">
-            <span class="section-subtitle">Visual Feast</span>
-            <h2 class="section-title">Gallery</h2>
-        </div>
-        <div class="gallery-grid" id="galleryGrid">
-            <!-- JS populated -->
-        </div>
-    </section>
-
-    <!-- Lightbox -->
-    <div id="lightbox">
-        <button class="close-lb" id="closeLb">&times;</button>
-        <img id="lbImg" src="" alt="Gallery Image">
-    </div>
-
-    <!-- Reviews Section -->
-    <section id="reviews">
-        <div class="section-header">
-            <span class="section-subtitle">Testimonials</span>
-            <h2 class="section-title">Guest Experiences</h2>
-        </div>
-        <div class="carousel-container">
-            <div class="carousel" id="reviewCarousel">
-                <!-- JS populated -->
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-        <div class="footer-grid">
-            <div class="footer-col">
-                <h2 style="font-family: 'Playfair Display', serif; color: var(--accent-gold); font-size: 24px; margin-bottom: 20px;">Vrindavan</h2>
-                <p style="opacity: 0.8; line-height: 1.6; font-size: 14px;">Elevating traditional Indian vegetarian cuisine to a fine-dining art form. Experience purity in every bite.</p>
-                <div class="social-links">
-                    <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
-                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
-                    <a href="#"><i class="fa-brands fa-twitter"></i></a>
+        <footer>
+            <div class="glass-panel footer-content">
+                <h2>Vrindavan</h2>
+                <p style="margin-top: 10px; color: var(--text-muted);">Where tradition meets the future of fine dining.</p>
+                <div style="margin-top: 20px; font-size: 1.5rem; color: var(--gold); display: flex; gap: 20px; justify-content: center;">
+                    <i class="fa-brands fa-instagram"></i>
+                    <i class="fa-brands fa-twitter"></i>
                 </div>
             </div>
-            <div class="footer-col">
-                <h4>Contact Us</h4>
-                <ul>
-                    <li><i class="fa-solid fa-location-dot"></i> 123 Heritage Marg, New Delhi, India</li>
-                    <li><i class="fa-solid fa-phone"></i> +91 98765 43210</li>
-                    <li><i class="fa-solid fa-envelope"></i> namaste@vrindavan.com</li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Location</h4>
-                <div class="map-container">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d224345.83923192776!2d77.06889754720972!3d28.52758200617607!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390cfd5b347eb62d%3A0x52c2b7494e204dce!2sNew%20Delhi%2C%20Delhi!5e0!3m2!1sen!2sin!4v1689254308871!5m2!1sen!2sin" allowfullscreen="" loading="lazy"></iframe>
-                </div>
-            </div>
-            <div class="footer-col">
-                <h4>Newsletter</h4>
-                <p style="font-size: 14px; opacity: 0.8; margin-bottom: 15px;">Subscribe for exclusive offers and seasonal menu updates.</p>
-                <form class="newsletter-form" id="newsletterForm">
-                    <input type="email" placeholder="Email Address" required>
-                    <button type="submit">Subscribe</button>
-                </form>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2026 Vrindavan – The Pure Veg Kitchen. All rights reserved. Designed for excellence.</p>
-        </div>
-    </footer>
+        </footer>
+    </main>
 
-    <!-- Chatbot Widget -->
-    <div id="chatbot-widget">
-        <button class="chat-btn" id="chatBtn"><i class="fa-solid fa-message"></i></button>
-        <div class="chat-window" id="chatWindow">
-            <div class="chat-header">
-                <span style="font-weight: 600;"><i class="fa-solid fa-robot"></i> Vrindavan Assistant</span>
-                <button id="closeChat" style="background:none; border:none; color:#fff; font-size:20px;">&times;</button>
-            </div>
-            <div class="chat-body" id="chatBody">
-                <div class="msg bot">Namaste! Welcome to Vrindavan. How may I assist you today? (Try asking: "book table", "menu", "hours")</div>
-            </div>
-            <div class="chat-input">
-                <input type="text" id="chatInput" placeholder="Type a message...">
-                <button id="sendChat"><i class="fa-solid fa-paper-plane"></i></button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 3D Confetti Popup -->
-    <div id="popup-canvas-container"></div>
-    <div class="popup" id="successPopup">
-        <button class="close-popup" id="closeSuccessPopup">&times;</button>
-        <h3><i class="fa-solid fa-circle-check" style="font-size: 40px; margin-bottom: 15px;"></i><br>Success!</h3>
-        <p id="popupMessage">Your request has been processed.</p>
-        <p style="font-size: 12px; color: var(--accent-saffron);">ID: <span id="popupId"></span></p>
-    </div>
-
-    <!-- Scripts -->
+    <!-- GSAP Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-
-    <script src="main.js"></script>
+    
+    <!-- App Entry -->
+    <script type="module" src="main.js"></script>
 </body>
 </html>

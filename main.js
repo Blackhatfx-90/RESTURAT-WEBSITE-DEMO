@@ -1,497 +1,214 @@
-document.addEventListener("DOMContentLoaded", () => {
-            gsap.registerPlugin(ScrollTrigger);
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
-            /* --- Loader --- */
-            setTimeout(() => {
-                const loader = document.getElementById('loader');
-                loader.style.opacity = '0';
-                setTimeout(() => loader.style.display = 'none', 800);
-                
-                // Trigger Hero Animations
-                gsap.to('.hero-title', { opacity: 1, y: 0, duration: 1, delay: 0.5, ease: "power3.out" });
-                gsap.to('.hero-subtitle', { opacity: 1, y: 0, duration: 1, delay: 0.7, ease: "power3.out" });
-                gsap.to('.hero-btns', { opacity: 1, y: 0, duration: 1, delay: 0.9, ease: "power3.out" });
-            }, 1500);
+// Setup loader
+const loader = document.getElementById('loader');
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        loader.style.opacity = '0';
+        setTimeout(() => {
+            loader.style.display = 'none';
+        }, 1000);
+    }, 1500);
+});
 
-            /* --- Theme Toggle --- */
-            const themeBtn = document.getElementById('themeBtn');
-            const htmlEl = document.documentElement;
-            const icon = themeBtn.querySelector('i');
-            
-            const savedTheme = localStorage.getItem('theme') || 'dark';
-            htmlEl.setAttribute('data-theme', savedTheme);
-            updateThemeIcon(savedTheme);
+// 1. Scene Setup
+const canvas = document.getElementById('webgl-canvas');
+const scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2(0x050505, 0.02); // Deep cinematic dark fog
 
-            themeBtn.addEventListener('click', () => {
-                const currentTheme = htmlEl.getAttribute('data-theme');
-                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-                htmlEl.setAttribute('data-theme', newTheme);
-                localStorage.setItem('theme', newTheme);
-                updateThemeIcon(newTheme);
-            });
+const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+camera.position.set(0, 0, 15);
 
-            function updateThemeIcon(theme) {
-                if (theme === 'dark') {
-                    icon.className = 'fa-solid fa-moon';
-                } else {
-                    icon.className = 'fa-solid fa-sun';
-                }
-            }
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.2;
+renderer.setClearColor(0x050505, 1);
 
-            /* --- Navbar Scroll & Mobile Menu --- */
-            const nav = document.querySelector('nav');
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 50) {
-                    nav.style.padding = '10px 5%';
-                    nav.style.boxShadow = '0 5px 20px rgba(0,0,0,0.5)';
-                } else {
-                    nav.style.padding = '20px 5%';
-                    nav.style.boxShadow = 'none';
-                }
-                updateActiveLink();
-            });
+// Generate Realistic Reflections (HDRI Alternative)
+const pmremGenerator = new THREE.PMREMGenerator(renderer);
+scene.environment = pmremGenerator.fromScene(new RoomEnvironment(), 0.04).texture;
 
-            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-            const navLinks = document.querySelector('.nav-links');
-            mobileMenuBtn.addEventListener('click', () => {
-                navLinks.classList.toggle('active');
-            });
+// 2. Materials
+const goldGlassMaterial = new THREE.MeshPhysicalMaterial({
+    color: 0xd4af37,
+    metalness: 0.9,
+    roughness: 0.1,
+    transmission: 0.9, // glass-like property
+    ior: 1.5,
+    thickness: 0.5,
+    clearcoat: 1.0,
+    clearcoatRoughness: 0.1
+});
 
-            const sections = document.querySelectorAll('section');
-            const navItems = document.querySelectorAll('.nav-links a');
-            
-            function updateActiveLink() {
-                let current = '';
-                sections.forEach(section => {
-                    const sectionTop = section.offsetTop;
-                    if (scrollY >= sectionTop - 150) {
-                        current = section.getAttribute('id');
-                    }
-                });
-                navItems.forEach(li => {
-                    li.classList.remove('active');
-                    if (li.getAttribute('href') === `#${current}`) {
-                        li.classList.add('active');
-                    }
-                });
-            }
+const darkMatterMaterial = new THREE.MeshPhysicalMaterial({
+    color: 0x111111,
+    metalness: 1.0,
+    roughness: 0.2,
+    clearcoat: 0.8
+});
 
-            /* --- Data Sets --- */
-            const menuData = [
-                { id: 1, title: 'Paneer Tikka', category: 'starter', price: '₹350', img: 'file:///Users/gyan/.gemini/antigravity/brain/589b88d3-26b2-48e4-a1f6-cd19e6c63efa/paneer_tikka_1777952105958.png', desc: 'Cottage cheese marinated in yogurt and Indian spices, roasted in tandoor.' },
-                { id: 2, title: 'Veg Samosa', category: 'starter', price: '₹150', img: 'file:///Users/gyan/.gemini/antigravity/brain/589b88d3-26b2-48e4-a1f6-cd19e6c63efa/veg_samosa_1777952129504.png', desc: 'Crispy pastry filled with spiced potatoes and peas. Served with mint chutney.' },
-                { id: 3, title: 'Dal Makhani', category: 'main', price: '₹400', img: 'file:///Users/gyan/.gemini/antigravity/brain/589b88d3-26b2-48e4-a1f6-cd19e6c63efa/dal_makhani_1777952146738.png', desc: 'Slow-cooked black lentils simmered overnight with tomatoes, butter, and cream.' },
-                { id: 4, title: 'Veg Biryani', category: 'main', price: '₹450', img: 'file:///Users/gyan/.gemini/antigravity/brain/589b88d3-26b2-48e4-a1f6-cd19e6c63efa/veg_biryani_1777952164630.png', desc: 'Aromatic basmati rice cooked with mixed vegetables, saffron, and exotic spices.' },
-                { id: 5, title: 'Garlic Naan', category: 'bread', price: '₹120', img: 'file:///Users/gyan/.gemini/antigravity/brain/589b88d3-26b2-48e4-a1f6-cd19e6c63efa/garlic_naan_1777952179686.png', desc: 'Soft and flaky flatbread topped with minced garlic and butter.' },
-                { id: 6, title: 'Gulab Jamun', category: 'dessert', price: '₹180', img: 'file:///Users/gyan/.gemini/antigravity/brain/589b88d3-26b2-48e4-a1f6-cd19e6c63efa/gulab_jamun_1777952196329.png', desc: 'Deep-fried milk dumplings soaked in cardamom flavored sugar syrup.' }
-            ];
+// 3. Objects
+const objects = [];
 
-            const galleryImages = [
-                'file:///Users/gyan/.gemini/antigravity/brain/589b88d3-26b2-48e4-a1f6-cd19e6c63efa/veg_thali_1777952211335.png',
-                'file:///Users/gyan/.gemini/antigravity/brain/589b88d3-26b2-48e4-a1f6-cd19e6c63efa/paneer_tikka_1777952105958.png',
-                'file:///Users/gyan/.gemini/antigravity/brain/589b88d3-26b2-48e4-a1f6-cd19e6c63efa/dal_makhani_1777952146738.png',
-                'file:///Users/gyan/.gemini/antigravity/brain/589b88d3-26b2-48e4-a1f6-cd19e6c63efa/veg_samosa_1777952129504.png',
-                'file:///Users/gyan/.gemini/antigravity/brain/589b88d3-26b2-48e4-a1f6-cd19e6c63efa/veg_biryani_1777952164630.png',
-                'file:///Users/gyan/.gemini/antigravity/brain/589b88d3-26b2-48e4-a1f6-cd19e6c63efa/gulab_jamun_1777952196329.png'
-            ];
+// Hero Object (Centerpiece)
+const heroGeo = new THREE.IcosahedronGeometry(2.5, 0);
+const heroMesh = new THREE.Mesh(heroGeo, goldGlassMaterial);
+scene.add(heroMesh);
+objects.push(heroMesh);
 
-            const reviewsData = [
-                { text: "The best Dal Makhani I've ever had! The ambiance is pure luxury and the service is impeccable.", author: "- Rahul M.", stars: 5 },
-                { text: "Vrindavan takes vegetarian dining to a whole new level. Highly recommend the Biryani.", author: "- Priya S.", stars: 5 },
-                { text: "A truly divine experience. The flavors are authentic and the presentation is beautiful.", author: "- Amit T.", stars: 4 },
-                { text: "Excellent place for family dinners. The staff goes above and beyond.", author: "- Neha K.", stars: 5 }
-            ];
+// Floating ambient objects
+const geometries = [
+    new THREE.TorusGeometry(0.8, 0.2, 16, 100),
+    new THREE.OctahedronGeometry(0.8, 0),
+    new THREE.TetrahedronGeometry(0.8, 0),
+    new THREE.SphereGeometry(0.6, 32, 32)
+];
 
-            /* --- Menu Rendering & Logic --- */
-            const menuGrid = document.getElementById('menuGrid');
-            const filterBtns = document.querySelectorAll('.filter-btn');
-            let cart = JSON.parse(localStorage.getItem('cart')) || [];
-            
-            function updateCartUI() {
-                document.getElementById('cartCount').innerText = cart.length;
-                const checkoutItems = document.getElementById('checkoutItems');
-                const placeOrderBtn = document.getElementById('placeOrderBtn');
-                
-                if (cart.length === 0) {
-                    checkoutItems.innerHTML = 'Cart is empty. Add items from the menu.';
-                    placeOrderBtn.disabled = true;
-                } else {
-                    const itemsText = cart.map(item => `${item.title} (${item.price})`).join(', ');
-                    checkoutItems.innerHTML = `<strong>Items:</strong> ${itemsText}`;
-                    placeOrderBtn.disabled = false;
-                }
-            }
-            updateCartUI();
+for(let i = 0; i < 25; i++) {
+    const geo = geometries[Math.floor(Math.random() * geometries.length)];
+    const mat = Math.random() > 0.4 ? goldGlassMaterial : darkMatterMaterial;
+    const mesh = new THREE.Mesh(geo, mat);
+    
+    // Spread around
+    mesh.position.set(
+        (Math.random() - 0.5) * 25,
+        (Math.random() - 0.5) * 25,
+        (Math.random() - 0.5) * 15 - 5
+    );
+    
+    mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, 0);
+    
+    const scale = Math.random() * 0.5 + 0.5;
+    mesh.scale.set(scale, scale, scale);
+    
+    scene.add(mesh);
+    objects.push({ 
+        mesh, 
+        speed: Math.random() * 0.02 + 0.005, 
+        axis: new THREE.Vector3(Math.random(), Math.random(), Math.random()).normalize(),
+        offsetY: Math.random() * Math.PI * 2
+    });
+}
 
-            function renderMenu(filter) {
-                menuGrid.innerHTML = '';
-                const filtered = filter === 'all' ? menuData : menuData.filter(i => i.category === filter);
-                
-                filtered.forEach(item => {
-                    const card = document.createElement('div');
-                    card.className = 'menu-card';
-                    card.innerHTML = `
-                        <div class="menu-card-front">
-                            <img src="${item.img}" alt="${item.title}">
-                            <div class="menu-card-info">
-                                <h3 class="menu-card-title">${item.title}</h3>
-                                <p class="menu-card-price">${item.price}</p>
-                            </div>
-                        </div>
-                        <div class="menu-card-back">
-                            <h3 class="menu-card-title" style="color:var(--accent-gold);">${item.title}</h3>
-                            <p class="menu-card-desc">${item.desc}</p>
-                            <button class="add-to-cart-btn" data-id="${item.id}">Add to Cart</button>
-                        </div>
-                    `;
-                    menuGrid.appendChild(card);
-                });
+// Particle System (Glowing Dust)
+const particlesGeometry = new THREE.BufferGeometry();
+const particlesCount = 1500;
+const posArray = new Float32Array(particlesCount * 3);
 
-                document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        const id = parseInt(e.target.getAttribute('data-id'));
-                        const item = menuData.find(i => i.id === id);
-                        cart.push(item);
-                        localStorage.setItem('cart', JSON.stringify(cart));
-                        updateCartUI();
-                        
-                        // Small animation
-                        e.target.innerText = 'Added!';
-                        e.target.style.background = 'green';
-                        setTimeout(() => {
-                            e.target.innerText = 'Add to Cart';
-                            e.target.style.background = 'var(--accent-gold)';
-                        }, 1000);
-                    });
-                });
-            }
+for(let i = 0; i < particlesCount * 3; i++) {
+    posArray[i] = (Math.random() - 0.5) * 40;
+}
+particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
 
-            renderMenu('all');
+const particlesMaterial = new THREE.PointsMaterial({
+    size: 0.08,
+    color: 0xd4af37,
+    transparent: true,
+    opacity: 0.6,
+    blending: THREE.AdditiveBlending
+});
+const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+scene.add(particlesMesh);
 
-            filterBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    filterBtns.forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    renderMenu(btn.getAttribute('data-filter'));
-                });
-            });
+// 4. Lights
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+scene.add(ambientLight);
 
-            /* --- Gallery Rendering & 3D Tilt --- */
-            const galleryGrid = document.getElementById('galleryGrid');
-            galleryImages.forEach(src => {
-                const item = document.createElement('div');
-                item.className = 'gallery-item';
-                item.innerHTML = `
-                    <img src="${src}" alt="Gallery">
-                    <div class="gallery-overlay">
-                        <i class="fa-solid fa-expand gallery-icon"></i>
-                    </div>
-                `;
-                galleryGrid.appendChild(item);
+const pointLight = new THREE.PointLight(0xd4af37, 2, 30);
+pointLight.position.set(3, 4, 5);
+scene.add(pointLight);
 
-                // 3D Tilt effect
-                item.addEventListener('mousemove', (e) => {
-                    const rect = item.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
-                    const centerX = rect.width / 2;
-                    const centerY = rect.height / 2;
-                    const rotateX = ((y - centerY) / centerY) * -15;
-                    const rotateY = ((x - centerX) / centerX) * 15;
-                    
-                    item.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-                });
-                item.addEventListener('mouseleave', () => {
-                    item.style.transform = `perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)`;
-                });
+const blueLight = new THREE.PointLight(0x4444ff, 1, 30);
+blueLight.position.set(-5, -3, -5);
+scene.add(blueLight);
 
-                // Lightbox trigger
-                item.addEventListener('click', () => {
-                    document.getElementById('lbImg').src = src;
-                    document.getElementById('lightbox').style.display = 'flex';
-                });
-            });
+// 5. Scroll Animations with GSAP
+gsap.registerPlugin(ScrollTrigger);
 
-            document.getElementById('closeLb').addEventListener('click', () => {
-                document.getElementById('lightbox').style.display = 'none';
-            });
+const tl = gsap.timeline({
+    scrollTrigger: {
+        trigger: "body",
+        start: "top top",
+        end: "bottom bottom",
+        scrub: 1
+    }
+});
 
-            /* --- Reviews 3D Carousel --- */
-            const carousel = document.getElementById('reviewCarousel');
-            reviewsData.forEach((rev, idx) => {
-                const angle = (360 / reviewsData.length) * idx;
-                const card = document.createElement('div');
-                card.className = 'review-card';
-                card.style.transform = `rotateY(${angle}deg) translateZ(350px)`;
-                
-                let starsHTML = '';
-                for(let i=0; i<rev.stars; i++) starsHTML += '<i class="fa-solid fa-star"></i>';
-                
-                card.innerHTML = `
-                    <div class="stars">${starsHTML}</div>
-                    <p class="review-text">"${rev.text}"</p>
-                    <p class="review-author">${rev.author}</p>
-                `;
-                carousel.appendChild(card);
-            });
+// Move camera and hero object as we scroll down
+tl.to(heroMesh.rotation, { x: Math.PI * 4, y: Math.PI * 4 }, 0)
+  .to(heroMesh.position, { y: 5, z: -10 }, 0)
+  .to(camera.position, { y: -15, z: 5 }, 0);
 
-            let currAngle = 0;
-            setInterval(() => {
-                currAngle -= (360 / reviewsData.length);
-                carousel.style.transform = `rotateY(${currAngle}deg)`;
-            }, 4000);
+// Animate UI Elements appearing
+gsap.utils.toArray('.glass-panel').forEach(panel => {
+    gsap.from(panel, {
+        scrollTrigger: {
+            trigger: panel,
+            start: "top 85%",
+            toggleActions: "play none none reverse"
+        },
+        y: 50,
+        opacity: 0,
+        duration: 1.5,
+        ease: "power3.out"
+    });
+});
 
-            /* --- Form Validation & Submission --- */
-            function validateForm(formId) {
-                let isValid = true;
-                const form = document.getElementById(formId);
-                const inputs = form.querySelectorAll('input[required], select[required], textarea[required]');
-                
-                inputs.forEach(input => {
-                    if (!input.value.trim() || !input.checkValidity()) {
-                        input.parentElement.classList.add('error');
-                        isValid = false;
-                    } else {
-                        input.parentElement.classList.remove('error');
-                    }
-                });
-                return isValid;
-            }
+// 6. Mouse Parallax
+let mouseX = 0;
+let mouseY = 0;
+let targetX = 0;
+let targetY = 0;
+const windowHalfX = window.innerWidth / 2;
+const windowHalfY = window.innerHeight / 2;
 
-            const inputs = document.querySelectorAll('.form-control');
-            inputs.forEach(input => {
-                input.addEventListener('input', () => {
-                    if(input.value.trim() && input.checkValidity()) {
-                        input.parentElement.classList.remove('error');
-                    }
-                });
-            });
+document.addEventListener('mousemove', (event) => {
+    mouseX = (event.clientX - windowHalfX) * 0.001;
+    mouseY = (event.clientY - windowHalfY) * 0.001;
+});
 
-            const popup = document.getElementById('successPopup');
-            const popupMsg = document.getElementById('popupMessage');
-            const popupId = document.getElementById('popupId');
+// 7. Animation Loop
+const clock = new THREE.Clock();
 
-            function showPopup(msg) {
-                popupMsg.innerText = msg;
-                popupId.innerText = 'VRN' + Math.floor(Math.random() * 1000000);
-                popup.classList.add('show');
-                fireConfetti();
-            }
+function animate() {
+    requestAnimationFrame(animate);
+    const elapsedTime = clock.getElapsedTime();
 
-            document.getElementById('closeSuccessPopup').addEventListener('click', () => {
-                popup.classList.remove('show');
-                document.getElementById('popup-canvas-container').style.display = 'none';
-            });
+    // Hero Object Float
+    heroMesh.position.y += Math.sin(elapsedTime * 2) * 0.003;
+    heroMesh.rotation.x += 0.002;
+    heroMesh.rotation.y += 0.003;
 
-            // Booking submit
-            document.getElementById('bookingForm').addEventListener('submit', (e) => {
-                e.preventDefault();
-                if (validateForm('bookingForm')) {
-                    const data = {
-                        name: document.getElementById('bookName').value,
-                        date: document.getElementById('bookDate').value,
-                        time: document.getElementById('bookTime').value,
-                        guests: document.getElementById('bookGuests').value
-                    };
-                    const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
-                    bookings.push(data);
-                    localStorage.setItem('bookings', JSON.stringify(bookings));
-                    
-                    showPopup(`Table reserved successfully for ${data.name} on ${data.date} at ${data.time}.`);
-                    e.target.reset();
-                }
-            });
+    // Floating Ambient Objects
+    for(let i = 1; i < objects.length; i++) {
+        const obj = objects[i];
+        if (obj.mesh) {
+            obj.mesh.position.y += Math.sin(elapsedTime * 1.5 + obj.offsetY) * 0.002;
+            obj.mesh.rotateOnAxis(obj.axis, obj.speed);
+        }
+    }
 
-            // Delivery submit
-            document.getElementById('deliveryForm').addEventListener('submit', (e) => {
-                e.preventDefault();
-                if (validateForm('deliveryForm') && cart.length > 0) {
-                    showPopup(`Order placed successfully! Preparing your delicious meal.`);
-                    e.target.reset();
-                    cart = [];
-                    localStorage.setItem('cart', JSON.stringify(cart));
-                    updateCartUI();
-                    
-                    // Start Tracker
-                    document.getElementById('deliveryTracker').style.display = 'block';
-                    document.getElementById('trackId').innerText = popupId.innerText;
-                    startDeliveryTracker();
-                }
-            });
+    // Particles Rotate
+    particlesMesh.rotation.y = elapsedTime * 0.03;
 
-            function startDeliveryTracker() {
-                const progress = document.getElementById('trackProgress');
-                const steps = [document.getElementById('step1'), document.getElementById('step2'), document.getElementById('step3'), document.getElementById('step4'), document.getElementById('step5')];
-                
-                let currentStep = 0;
-                progress.style.width = '0%';
-                steps.forEach(s => s.classList.remove('active'));
-                steps[0].classList.add('active');
+    // Mouse Parallax Damping
+    targetX = mouseX * 3;
+    targetY = mouseY * 3;
+    camera.position.x += 0.05 * (targetX - camera.position.x);
+    camera.position.y += 0.05 * (-targetY - camera.position.y);
+    camera.lookAt(scene.position);
 
-                const interval = setInterval(() => {
-                    currentStep++;
-                    if (currentStep >= steps.length) {
-                        clearInterval(interval);
-                        return;
-                    }
-                    progress.style.width = `${currentStep * 25}%`;
-                    steps[currentStep].classList.add('active');
-                }, 3000); // Fast simulation
-            }
+    renderer.render(scene, camera);
+}
+animate();
 
-            // Newsletter submit
-            document.getElementById('newsletterForm').addEventListener('submit', (e) => {
-                e.preventDefault();
-                const btn = e.target.querySelector('button');
-                btn.innerText = 'Subscribed!';
-                btn.style.background = 'green';
-                setTimeout(() => {
-                    btn.innerText = 'Subscribe';
-                    btn.style.background = 'var(--accent-gold)';
-                    e.target.reset();
-                }, 2000);
-            });
-
-            /* --- Chatbot Logic --- */
-            const chatBtn = document.getElementById('chatBtn');
-            const chatWindow = document.getElementById('chatWindow');
-            const closeChat = document.getElementById('closeChat');
-            const chatInput = document.getElementById('chatInput');
-            const sendChat = document.getElementById('sendChat');
-            const chatBody = document.getElementById('chatBody');
-
-            chatBtn.addEventListener('click', () => chatWindow.classList.add('open'));
-            closeChat.addEventListener('click', () => chatWindow.classList.remove('open'));
-
-            // Load session history
-            const history = JSON.parse(sessionStorage.getItem('chatHistory')) || [];
-            if(history.length > 0) {
-                chatBody.innerHTML = '';
-                history.forEach(h => addMessage(h.text, h.sender, false));
-            }
-
-            function addMessage(text, sender, save=true) {
-                const div = document.createElement('div');
-                div.className = `msg ${sender}`;
-                div.innerText = text;
-                chatBody.appendChild(div);
-                chatBody.scrollTop = chatBody.scrollHeight;
-                
-                if(save) {
-                    history.push({text, sender});
-                    sessionStorage.setItem('chatHistory', JSON.stringify(history));
-                }
-            }
-
-            function showTyping() {
-                const div = document.createElement('div');
-                div.className = `typing-indicator`;
-                div.id = 'typing';
-                div.innerHTML = `<div class="dot"></div><div class="dot"></div><div class="dot"></div>`;
-                chatBody.appendChild(div);
-                chatBody.scrollTop = chatBody.scrollHeight;
-            }
-
-            function removeTyping() {
-                const el = document.getElementById('typing');
-                if(el) el.remove();
-            }
-
-            function botReply(userMsg) {
-                showTyping();
-                const msg = userMsg.toLowerCase();
-                let reply = "I'm sorry, I didn't understand that. You can ask about our menu, booking a table, or opening hours.";
-                
-                setTimeout(() => {
-                    removeTyping();
-                    if(msg.includes('book') || msg.includes('table')) {
-                        reply = "You can book a table using the 'Book Table' section on our website. Would you like me to scroll there for you? (Type 'yes' to scroll)";
-                        sessionStorage.setItem('botAction', 'scrollBooking');
-                    } else if(msg.includes('menu') || msg.includes('food') || msg.includes('veg')) {
-                        reply = "We serve 100% pure vegetarian Indian cuisine. Our specialties include Dal Makhani, Paneer Tikka, and Veg Biryani. Check out the Menu section!";
-                    } else if(msg.includes('hour') || msg.includes('time') || msg.includes('open')) {
-                        reply = "We are open Mon-Fri from 11:00 AM to 10:30 PM, and Sat-Sun from 11:00 AM to 11:30 PM.";
-                    } else if(sessionStorage.getItem('botAction') === 'scrollBooking' && msg === 'yes') {
-                        document.getElementById('booking').scrollIntoView({behavior: 'smooth'});
-                        reply = "Taking you to the booking section!";
-                        sessionStorage.removeItem('botAction');
-                    }
-                    addMessage(reply, 'bot');
-                }, 1000);
-            }
-
-            sendChat.addEventListener('click', () => {
-                const text = chatInput.value.trim();
-                if(!text) return;
-                addMessage(text, 'user');
-                chatInput.value = '';
-                botReply(text);
-            });
-            chatInput.addEventListener('keypress', (e) => {
-                if(e.key === 'Enter') sendChat.click();
-            });
-
-
-            
-            /* --- Simple Confetti Popup --- */
-            function fireConfetti() {
-                const container = document.getElementById("popup-canvas-container");
-                container.style.display = "block";
-                container.innerHTML = "";
-                
-                for(let i=0; i<50; i++) {
-                    const conf = document.createElement("div");
-                    conf.style.position = "absolute";
-                    conf.style.width = "10px";
-                    conf.style.height = "10px";
-                    conf.style.backgroundColor = ["#d4af37", "#ff6b35", "#ffffff"][Math.floor(Math.random()*3)];
-                    conf.style.left = Math.random() * 100 + "vw";
-                    conf.style.top = "-10px";
-                    conf.style.opacity = Math.random();
-                    conf.style.transform = `rotate(${Math.random() * 360}deg)`;
-                    container.appendChild(conf);
-                    
-                    gsap.to(conf, {
-                        y: window.innerHeight + 100,
-                        x: `+=${(Math.random() - 0.5) * 200}`,
-                        rotation: `+=${Math.random() * 360}`,
-                        duration: 2 + Math.random() * 2,
-                        ease: "power1.inOut",
-                        onComplete: () => conf.remove()
-                    });
-                }
-            }
-/* --- GSAP Scroll Animations --- */
-            gsap.from("#about-canvas-container", {
-                scrollTrigger: {
-                    trigger: "#about",
-                    start: "top 80%",
-                },
-                x: -100,
-                opacity: 0,
-                duration: 1.5,
-                ease: "power3.out"
-            });
-            gsap.from(".about-text", {
-                scrollTrigger: {
-                    trigger: "#about",
-                    start: "top 80%",
-                },
-                x: 100,
-                opacity: 0,
-                duration: 1.5,
-                ease: "power3.out"
-            });
-            
-            gsap.utils.toArray('.section-header').forEach(header => {
-                gsap.from(header, {
-                    scrollTrigger: {
-                        trigger: header,
-                        start: "top 85%"
-                    },
-                    y: 50,
-                    opacity: 0,
-                    duration: 1
-                });
-            });
-        });
+// 8. Resize Handler
+window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+});
