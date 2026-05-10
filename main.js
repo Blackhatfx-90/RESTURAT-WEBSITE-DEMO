@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
 // Setup loader
 const loader = document.getElementById('loader');
@@ -15,117 +14,162 @@ window.addEventListener('load', () => {
 // 1. Scene Setup
 const canvas = document.getElementById('webgl-canvas');
 const scene = new THREE.Scene();
-scene.fog = new THREE.FogExp2(0x050505, 0.02); // Deep cinematic dark fog
+scene.fog = new THREE.FogExp2(0x120a06, 0.025); // Warm dark smoky fog
 
-const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
-camera.position.set(0, 0, 15);
+const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 100);
+camera.position.set(0, 0, 12);
 
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.2;
-renderer.setClearColor(0x050505, 1);
+renderer.toneMappingExposure = 1.3;
+renderer.setClearColor(0x120a06, 1);
 
-// Generate Realistic Reflections (HDRI Alternative)
-const pmremGenerator = new THREE.PMREMGenerator(renderer);
-scene.environment = pmremGenerator.fromScene(new RoomEnvironment(), 0.04).texture;
+// 2. Embers / Fire Particles (Tandoor / Cooking Vibe)
+const emberCount = 800;
+const emberGeometry = new THREE.BufferGeometry();
+const emberPos = new Float32Array(emberCount * 3);
+const emberSpeeds = new Float32Array(emberCount);
+const emberWobble = new Float32Array(emberCount);
 
-// 2. Materials
-const goldGlassMaterial = new THREE.MeshPhysicalMaterial({
-    color: 0xd4af37,
-    metalness: 0.9,
-    roughness: 0.1,
-    transmission: 0.9, // glass-like property
-    ior: 1.5,
-    thickness: 0.5,
-    clearcoat: 1.0,
-    clearcoatRoughness: 0.1
+for(let i=0; i<emberCount; i++) {
+    emberPos[i*3] = (Math.random() - 0.5) * 30; // x
+    emberPos[i*3+1] = (Math.random() - 0.5) * 30 - 10; // y
+    emberPos[i*3+2] = (Math.random() - 0.5) * 20; // z
+    emberSpeeds[i] = Math.random() * 0.03 + 0.01;
+    emberWobble[i] = Math.random() * Math.PI * 2;
+}
+emberGeometry.setAttribute('position', new THREE.BufferAttribute(emberPos, 3));
+emberGeometry.setAttribute('speed', new THREE.BufferAttribute(emberSpeeds, 1));
+emberGeometry.setAttribute('wobble', new THREE.BufferAttribute(emberWobble, 1));
+
+// Create a glowing circular texture for embers
+const canvas2d = document.createElement('canvas');
+canvas2d.width = 32; canvas2d.height = 32;
+const ctx = canvas2d.getContext('2d');
+const gradient = ctx.createRadialGradient(16, 16, 0, 16, 16, 16);
+gradient.addColorStop(0, 'rgba(255, 220, 100, 1)');
+gradient.addColorStop(0.2, 'rgba(255, 100, 0, 0.8)');
+gradient.addColorStop(1, 'rgba(0,0,0,0)');
+ctx.fillStyle = gradient;
+ctx.fillRect(0,0,32,32);
+const emberTexture = new THREE.CanvasTexture(canvas2d);
+
+const emberMaterial = new THREE.PointsMaterial({
+    size: 0.5,
+    map: emberTexture,
+    transparent: true,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    color: 0xff6600
 });
+const emberParticles = new THREE.Points(emberGeometry, emberMaterial);
+scene.add(emberParticles);
 
-const darkMatterMaterial = new THREE.MeshPhysicalMaterial({
-    color: 0x111111,
-    metalness: 1.0,
-    roughness: 0.2,
-    clearcoat: 0.8
-});
-
-// 3. Objects
-const objects = [];
-
-// Hero Object (Centerpiece)
-const heroGeo = new THREE.IcosahedronGeometry(2.5, 0);
-const heroMesh = new THREE.Mesh(heroGeo, goldGlassMaterial);
-scene.add(heroMesh);
-objects.push(heroMesh);
-
-// Floating ambient objects
-const geometries = [
-    new THREE.TorusGeometry(0.8, 0.2, 16, 100),
-    new THREE.OctahedronGeometry(0.8, 0),
-    new THREE.TetrahedronGeometry(0.8, 0),
-    new THREE.SphereGeometry(0.6, 32, 32)
+// 3. Floating Spices / Leaves (Authentic food vibe)
+const spiceCount = 300;
+const spiceGeo = new THREE.BufferGeometry();
+const spicePos = new Float32Array(spiceCount * 3);
+const spiceColors = new Float32Array(spiceCount * 3);
+const colorPalettes = [
+    new THREE.Color(0xe5b35c), // Turmeric / Saffron
+    new THREE.Color(0x8b2b1a), // Red Chili
+    new THREE.Color(0x3e4f1a)  // Coriander / Mint green
 ];
 
-for(let i = 0; i < 25; i++) {
-    const geo = geometries[Math.floor(Math.random() * geometries.length)];
-    const mat = Math.random() > 0.4 ? goldGlassMaterial : darkMatterMaterial;
-    const mesh = new THREE.Mesh(geo, mat);
+for(let i=0; i<spiceCount; i++) {
+    spicePos[i*3] = (Math.random() - 0.5) * 25;
+    spicePos[i*3+1] = (Math.random() - 0.5) * 25;
+    spicePos[i*3+2] = (Math.random() - 0.5) * 15;
     
-    // Spread around
-    mesh.position.set(
-        (Math.random() - 0.5) * 25,
-        (Math.random() - 0.5) * 25,
-        (Math.random() - 0.5) * 15 - 5
-    );
-    
-    mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, 0);
-    
-    const scale = Math.random() * 0.5 + 0.5;
-    mesh.scale.set(scale, scale, scale);
-    
-    scene.add(mesh);
-    objects.push({ 
-        mesh, 
-        speed: Math.random() * 0.02 + 0.005, 
-        axis: new THREE.Vector3(Math.random(), Math.random(), Math.random()).normalize(),
-        offsetY: Math.random() * Math.PI * 2
-    });
+    const col = colorPalettes[Math.floor(Math.random() * colorPalettes.length)];
+    spiceColors[i*3] = col.r;
+    spiceColors[i*3+1] = col.g;
+    spiceColors[i*3+2] = col.b;
 }
+spiceGeo.setAttribute('position', new THREE.BufferAttribute(spicePos, 3));
+spiceGeo.setAttribute('color', new THREE.BufferAttribute(spiceColors, 3));
 
-// Particle System (Glowing Dust)
-const particlesGeometry = new THREE.BufferGeometry();
-const particlesCount = 1500;
-const posArray = new Float32Array(particlesCount * 3);
+// Create a diamond/leaf shape texture
+const leafCanvas = document.createElement('canvas');
+leafCanvas.width = 32; leafCanvas.height = 32;
+const lctx = leafCanvas.getContext('2d');
+lctx.fillStyle = "white";
+lctx.beginPath();
+lctx.moveTo(16, 0); lctx.lineTo(32, 16); lctx.lineTo(16, 32); lctx.lineTo(0, 16);
+lctx.fill();
+const spiceTexture = new THREE.CanvasTexture(leafCanvas);
 
-for(let i = 0; i < particlesCount * 3; i++) {
-    posArray[i] = (Math.random() - 0.5) * 40;
-}
-particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-
-const particlesMaterial = new THREE.PointsMaterial({
-    size: 0.08,
-    color: 0xd4af37,
+const spiceMat = new THREE.PointsMaterial({
+    size: 0.3,
+    map: spiceTexture,
+    vertexColors: true,
     transparent: true,
-    opacity: 0.6,
-    blending: THREE.AdditiveBlending
+    opacity: 0.7,
+    depthWrite: false
 });
-const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
-scene.add(particlesMesh);
+const spiceParticles = new THREE.Points(spiceGeo, spiceMat);
+scene.add(spiceParticles);
 
-// 4. Lights
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+// 4. Centerpiece: Golden Traditional Mandala / Plate
+const mandalaGroup = new THREE.Group();
+
+const goldMat = new THREE.MeshStandardMaterial({
+    color: 0xe5b35c, metalness: 0.6, roughness: 0.4
+});
+const darkMat = new THREE.MeshStandardMaterial({
+    color: 0x8b2b1a, metalness: 0.2, roughness: 0.8
+});
+
+// Outer Ring
+const ringGeo = new THREE.TorusGeometry(3.5, 0.08, 16, 100);
+const ring = new THREE.Mesh(ringGeo, goldMat);
+mandalaGroup.add(ring);
+
+// Inner decorative petals
+for(let i=0; i<12; i++) {
+    const petalGeo = new THREE.SphereGeometry(1.2, 32, 16);
+    petalGeo.scale(1, 0.05, 2.5);
+    const petal = new THREE.Mesh(petalGeo, i % 2 === 0 ? goldMat : darkMat);
+    petal.position.x = Math.cos((i / 12) * Math.PI * 2) * 2;
+    petal.position.y = Math.sin((i / 12) * Math.PI * 2) * 2;
+    petal.rotation.z = (i / 12) * Math.PI * 2;
+    mandalaGroup.add(petal);
+}
+
+// Glowing Center (Like a Diya/Lamp)
+const diyaGeo = new THREE.SphereGeometry(0.8, 32, 32);
+const diyaMat = new THREE.MeshStandardMaterial({
+    color: 0xffffff, emissive: 0xff6600, emissiveIntensity: 2
+});
+const diya = new THREE.Mesh(diyaGeo, diyaMat);
+mandalaGroup.add(diya);
+
+// Subtle glow aura behind the mandala
+const auraGeo = new THREE.PlaneGeometry(12, 12);
+const auraMat = new THREE.MeshBasicMaterial({
+    map: emberTexture, transparent: true, opacity: 0.3, color: 0xff4400, depthWrite: false
+});
+const aura = new THREE.Mesh(auraGeo, auraMat);
+aura.position.z = -1;
+mandalaGroup.add(aura);
+
+scene.add(mandalaGroup);
+
+// 5. Lights
+const ambientLight = new THREE.AmbientLight(0x553322, 1.5); // Warm ambient
 scene.add(ambientLight);
 
-const pointLight = new THREE.PointLight(0xd4af37, 2, 30);
-pointLight.position.set(3, 4, 5);
-scene.add(pointLight);
+const fireLight = new THREE.PointLight(0xff4400, 4, 30); // Fire glow from below
+fireLight.position.set(0, -5, 2);
+scene.add(fireLight);
 
-const blueLight = new THREE.PointLight(0x4444ff, 1, 30);
-blueLight.position.set(-5, -3, -5);
-scene.add(blueLight);
+const rimLight = new THREE.PointLight(0xe5b35c, 2, 20); // Gold rim light from top
+rimLight.position.set(0, 5, -2);
+scene.add(rimLight);
 
-// 5. Scroll Animations with GSAP
+// 6. Scroll Animations with GSAP
 gsap.registerPlugin(ScrollTrigger);
 
 const tl = gsap.timeline({
@@ -137,31 +181,21 @@ const tl = gsap.timeline({
     }
 });
 
-// Move camera and hero object as we scroll down
-tl.to(heroMesh.rotation, { x: Math.PI * 4, y: Math.PI * 4 }, 0)
-  .to(heroMesh.position, { y: 5, z: -10 }, 0)
-  .to(camera.position, { y: -15, z: 5 }, 0);
+// Camera and Mandala movement on scroll
+tl.to(mandalaGroup.rotation, { x: Math.PI * 1.5, y: Math.PI * 0.5, z: Math.PI }, 0)
+  .to(mandalaGroup.position, { y: 6, z: -8 }, 0)
+  .to(camera.position, { y: -8, z: 8 }, 0);
 
-// Animate UI Elements appearing
 gsap.utils.toArray('.glass-panel').forEach(panel => {
     gsap.from(panel, {
-        scrollTrigger: {
-            trigger: panel,
-            start: "top 85%",
-            toggleActions: "play none none reverse"
-        },
-        y: 50,
-        opacity: 0,
-        duration: 1.5,
-        ease: "power3.out"
+        scrollTrigger: { trigger: panel, start: "top 85%", toggleActions: "play none none reverse" },
+        y: 40, opacity: 0, duration: 1.2, ease: "power2.out"
     });
 });
 
-// 6. Mouse Parallax
-let mouseX = 0;
-let mouseY = 0;
-let targetX = 0;
-let targetY = 0;
+// 7. Mouse Parallax
+let mouseX = 0; let mouseY = 0;
+let targetX = 0; let targetY = 0;
 const windowHalfX = window.innerWidth / 2;
 const windowHalfY = window.innerHeight / 2;
 
@@ -170,33 +204,38 @@ document.addEventListener('mousemove', (event) => {
     mouseY = (event.clientY - windowHalfY) * 0.001;
 });
 
-// 7. Animation Loop
+// 8. Animation Loop
 const clock = new THREE.Clock();
 
 function animate() {
     requestAnimationFrame(animate);
     const elapsedTime = clock.getElapsedTime();
 
-    // Hero Object Float
-    heroMesh.position.y += Math.sin(elapsedTime * 2) * 0.003;
-    heroMesh.rotation.x += 0.002;
-    heroMesh.rotation.y += 0.003;
+    // Mandala slow rotation and floating
+    mandalaGroup.position.y += Math.sin(elapsedTime * 1.5) * 0.002;
+    mandalaGroup.rotation.z -= 0.002;
 
-    // Floating Ambient Objects
-    for(let i = 1; i < objects.length; i++) {
-        const obj = objects[i];
-        if (obj.mesh) {
-            obj.mesh.position.y += Math.sin(elapsedTime * 1.5 + obj.offsetY) * 0.002;
-            obj.mesh.rotateOnAxis(obj.axis, obj.speed);
+    // Embers (Rise up and wobble)
+    const ePos = emberGeometry.attributes.position.array;
+    for(let i=0; i<emberCount; i++) {
+        ePos[i*3+1] += emberSpeeds[i]; // Move up
+        ePos[i*3] += Math.sin(elapsedTime * 2 + emberWobble[i]) * 0.01; // Wobble X
+        
+        // Reset to bottom if they go too high
+        if(ePos[i*3+1] > 15) {
+            ePos[i*3+1] = -15;
+            ePos[i*3] = (Math.random() - 0.5) * 30;
         }
     }
+    emberGeometry.attributes.position.needsUpdate = true;
 
-    // Particles Rotate
-    particlesMesh.rotation.y = elapsedTime * 0.03;
+    // Spices (Slowly float and swirl)
+    spiceParticles.rotation.y = elapsedTime * 0.05;
+    spiceParticles.rotation.x = Math.sin(elapsedTime * 0.1) * 0.1;
 
     // Mouse Parallax Damping
-    targetX = mouseX * 3;
-    targetY = mouseY * 3;
+    targetX = mouseX * 2;
+    targetY = mouseY * 2;
     camera.position.x += 0.05 * (targetX - camera.position.x);
     camera.position.y += 0.05 * (-targetY - camera.position.y);
     camera.lookAt(scene.position);
@@ -205,7 +244,7 @@ function animate() {
 }
 animate();
 
-// 8. Resize Handler
+// 9. Resize Handler
 window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
